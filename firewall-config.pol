@@ -1,0 +1,43 @@
+# CS 6250 Summer 2020 - Firewall Policy
+# Rule number, srcmac, dstmac, srcip, dstip, srcport, dstport, protocol, ipprotocol
+# Rule number is incremented each time - mostly for debug purposes
+# - for a rule element indicates that you don't need to match it.
+# Comments are on their own line.  You may use more than one line per rule
+
+
+#1. block PPTP that will prohibit all hosts from sending traffic to a PPTP server running on server2 (TCP Port 1723 and the GRE IP Protocol)
+1, -, -, -, 10.0.0.6, -, 1723, T, -
+2, -, -, -, 10.0.0.6, -, -, O, 47
+
+#2.prohibit all hosts from sending traffic to a SSH server on the east hosts (e1-e3).
+3, -, -, -, 10.0.0.2, -, 22, T, -
+4, -, -, -, 10.0.0.3, -, 22, T, -
+5, -, -, -, 10.0.0.4, -, 22, T, -
+
+#3. protect the DNS and NTP services on both server1 and server2 from receiving traffic by all hosts.
+# the DNS and NTP services on server3 should be accessible to all hosts. (Only block the UDP Ports for NTP and DNS)
+6, -, -, -, 10.0.0.5, -, 123, U, -
+7, -, -, -, 10.0.0.5, -, 53, U, -
+8, -, -, -, 10.0.0.6, -, 123, U, -
+9, -, -, -, 10.0.0.6, -, 53, U, -
+
+#4. disallow hosts w1 and w2 from pinging client1.
+10, 00:00:00:00:00:08, -, -, 10.0.0.1, -, -, I, -
+11, 00:00:00:00:00:09, -, -, 10.0.0.1, -, -, I, -
+
+#5. disallow host e1 from sending traffic destined to TCP ports 9950-9952 on host e3.
+12, -, -, 10.0.0.2, 10.0.0.4, -, 9950, T, -
+13, -, -, 10.0.0.2, 10.0.0.4, -, 9951, T, -
+14, -, -, 10.0.0.2, 10.0.0.4, -, 9952, T, -
+
+#6. restrict host client1 from sending traffic to any of the east hosts (e1-e3) on both TCP and UDP protocols.
+15, -, -, 10.0.0.1, 10.0.0.2, -, -, B, -
+16, -, -, 10.0.0.1, 10.0.0.3, -, -, B, -
+17, -, -, 10.0.0.1, 10.0.0.4, -, -, B, -
+
+
+#7. prohibit all hosts from sending traffic to a L2TP/IPSEC server running on server3.L2TP uses a variety of ports. 
+18, -, -, -, 10.0.0.7, -, 500, U, -
+19, -, -, -, 10.0.0.7, -, 1701, U, -
+20, -, -, -, 10.0.0.7, -, -, O, 50
+
